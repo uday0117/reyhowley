@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "511382039985",
+    "project_id": "reyhowley",
+    "storage_bucket": "reyhowley.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:511382039985:android:2f1c90d8cf2b8eb92a2190",
+        "android_client_info": {
+          "package_name": "com.reyhowley.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBje9-Lg6_qDS-mkKSVj0XPIyRM2ubGocM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
