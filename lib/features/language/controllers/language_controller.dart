@@ -60,7 +60,9 @@ class LocalizationController extends GetxController implements GetxService {
       );
     }
 
-    update(['locale-builder']);
+    // update(['locale-builder']);
+    update();
+
   }
 
   void loadCurrentLanguage() async {
@@ -72,7 +74,9 @@ class LocalizationController extends GetxController implements GetxService {
     );
     _languages = [];
     _languages.addAll(AppConstants.languages);
-    update(['locale-builder']);
+    // update(['locale-builder']);
+    update();
+
   }
 
   void saveLanguage(Locale locale) async {
@@ -87,7 +91,9 @@ class LocalizationController extends GetxController implements GetxService {
 
   void setSelectLanguageIndex(int index) {
     _selectedLanguageIndex = index;
-    update(['locale-builder']);
+    // update(['locale-builder']);
+    update();
+
   }
 
   Locale getCacheLocaleFromSharedPref() {
@@ -95,12 +101,10 @@ class LocalizationController extends GetxController implements GetxService {
   }
 
   void searchSelectedLanguage() {
-    for (var language in AppConstants.languages) {
-      if (language.languageCode!.toLowerCase().contains(
-        _locale.languageCode.toLowerCase(),
-      )) {
-        _selectedLanguageIndex = AppConstants.languages.indexOf(language);
-      }
-    }
+    _selectedLanguageIndex = AppConstants.languages.indexWhere(
+      (language) =>
+          language.languageCode == _locale.languageCode &&
+          language.countryCode == _locale.countryCode,
+    );
   }
 }

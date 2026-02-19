@@ -5,19 +5,19 @@ import 'package:reyhowley/util/images.dart';
 
 class AppConstants {
   static const String appName = 'ReyHowley';
-  static const double appVersion = 3.6;
+  static const double appVersion = 1.0;
 
   ///Flutter sdk 3.38.5
 
   static const String fontFamily = 'Roboto';
   static const bool payInWevView = false;
   static const int balanceInputLen = 10;
-  static const String webHostedUrl = 'https://reyhowley.com';
+  static const String webHostedUrl = 'https://admin.reyhowley.com/';
   static const bool useReactWebsite = false;
   static const String googleServerClientId =
       '491987943015-agln6biv84krpnngdphj87jkko7r9lb8.apps.googleusercontent.com';
 
-  static const String baseUrl = 'https://reyhowley.com';
+  static const String baseUrl = 'https://admin.reyhowley.com';
   static const String categoryUri = '/api/v1/categories';
   static const String bannerUri = '/api/v1/banners';
   static const String storeItemUri = '/api/v1/items/latest';
@@ -358,8 +358,21 @@ class AppConstants {
       languageCode: 'en',
     ),
     LanguageModel(
+      imageUrl: Images.telugu,
+      languageName: 'Telugu',
+      countryCode: 'IN',
+      languageCode: 'te',
+    ),
+
+    LanguageModel(
+      imageUrl: Images.bangla,
+      languageName: 'Bangla',
+      countryCode: 'BD',
+      languageCode: 'bn',
+    ),
+    LanguageModel(
       imageUrl: Images.arabic,
-      languageName: 'عربى',
+      languageName: 'Arabic',
       countryCode: 'SA',
       languageCode: 'ar',
     ),
@@ -368,12 +381,6 @@ class AppConstants {
       languageName: 'Spanish',
       countryCode: 'ES',
       languageCode: 'es',
-    ),
-    LanguageModel(
-      imageUrl: Images.bengali,
-      languageName: 'Bengali',
-      countryCode: 'BN',
-      languageCode: 'bn',
     ),
   ];
 
