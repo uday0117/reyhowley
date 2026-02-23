@@ -27,6 +27,7 @@ class AuthRepository implements AuthRepositoryInterface {
 
   @override
   Future<Response> registration(SignUpBodyModel signUpBody) async {
+    signUpBody.deviceToken ??= await saveDeviceToken();
     return await apiClient.postData(
       AppConstants.registerUri,
       signUpBody.toJson(),
@@ -202,9 +203,12 @@ class AuthRepository implements AuthRepositoryInterface {
       }
       if (!GetPlatform.isWeb) {
         FirebaseMessaging.instance.subscribeToTopic(AppConstants.topic);
-        FirebaseMessaging.instance.subscribeToTopic(
-          'zone_${AddressHelper.getUserAddressFromSharedPref()!.zoneId}_customer',
-        );
+        final userAddress = AddressHelper.getUserAddressFromSharedPref();
+        if (userAddress != null && userAddress.zoneId != null) {
+          FirebaseMessaging.instance.subscribeToTopic(
+            'zone_${userAddress.zoneId}_customer',
+          );
+        }
       }
     }
     return await apiClient.postData(AppConstants.tokenUri, {
@@ -395,9 +399,12 @@ class AuthRepository implements AuthRepositoryInterface {
         await updateToken(notificationDeviceToken: '@');
         FirebaseMessaging.instance.unsubscribeFromTopic(AppConstants.topic);
         if (isLoggedIn()) {
-          FirebaseMessaging.instance.unsubscribeFromTopic(
-            'zone_${AddressHelper.getUserAddressFromSharedPref()!.zoneId}_customer',
-          );
+          final userAddress = AddressHelper.getUserAddressFromSharedPref();
+          if (userAddress != null && userAddress.zoneId != null) {
+            FirebaseMessaging.instance.unsubscribeFromTopic(
+              'zone_${userAddress.zoneId}_customer',
+            );
+          }
         }
       }
     }

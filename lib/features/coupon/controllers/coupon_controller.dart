@@ -37,10 +37,19 @@ class CouponController extends GetxController implements GetxService {
   }
 
   Future<void> getCouponList() async {
-    List<CouponModel>? couponList = await couponServiceInterface.getCouponList();
-    if (couponList != null) {
+    try {
+      List<CouponModel>? couponList = await couponServiceInterface.getCouponList();
+      if (couponList != null) {
+        _couponList = [];
+        _couponList!.addAll(couponList);
+      } else {
+        // API returned null, initialize empty list
+        _couponList = [];
+      }
+    } catch (e) {
+      print('⚠️  Failed to get coupon list (backend API unavailable): $e');
+      // Backend API failed - initialize empty list
       _couponList = [];
-      _couponList!.addAll(couponList);
     }
     update();
   }

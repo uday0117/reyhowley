@@ -1,22 +1,54 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:reyhowley/common/models/response_model.dart';
 import 'package:reyhowley/features/auth/domain/models/signup_body_model.dart';
 import 'package:reyhowley/features/auth/domain/models/social_log_in_body.dart';
 
-abstract class AuthServiceInterface{
+abstract class AuthServiceInterface {
   bool isSharedPrefNotificationActive();
   Future<ResponseModel> registration(SignUpBodyModel signUpBody);
-  Future<ResponseModel> login({required String emailOrPhone, required String password, required String loginType, required String fieldType, bool alreadyInApp = false});
-  Future<ResponseModel> otpLogin({required String phone, required String otp, required String loginType, required String verified, bool alreadyInApp = false});
-  Future<ResponseModel> updatePersonalInfo({required String name, required String? phone, required String loginType, required String? email, required String? referCode, bool alreadyInApp = false});
+  Future<ResponseModel> login({
+    required String emailOrPhone,
+    required String password,
+    required String loginType,
+    required String fieldType,
+    bool alreadyInApp = false,
+  });
+  Future<ResponseModel> otpLogin({
+    required String phone,
+    required String otp,
+    required String loginType,
+    required String verified,
+    bool alreadyInApp = false,
+  });
+  Future<ResponseModel> updatePersonalInfo({
+    required String name,
+    required String? phone,
+    required String loginType,
+    required String? email,
+    required String? referCode,
+    bool alreadyInApp = false,
+  });
   Future<ResponseModel> guestLogin();
-  Future<ResponseModel> loginWithSocialMedia(SocialLogInBody socialLogInModel, {bool isCustomerVerificationOn = false});
+  Future<ResponseModel> loginWithSocialMedia(
+    SocialLogInBody socialLogInModel, {
+    bool isCustomerVerificationOn = false,
+  });
+  Future<ResponseModel> loginWithFirebaseUser(
+    User user, {
+    String? loginType,
+    bool alreadyInApp = false,
+  });
   Future<void> updateToken();
   bool isLoggedIn();
   bool isGuestLoggedIn();
   String getSharedPrefGuestId();
   Future<bool> clearSharedData({bool removeToken = true});
   Future<bool> clearSharedAddress();
-  Future<void> saveUserNumberAndPassword(String number, String password, String countryCode);
+  Future<void> saveUserNumberAndPassword(
+    String number,
+    String password,
+    String countryCode,
+  );
   String getUserNumber();
   String getUserCountryCode();
   String getUserPassword();

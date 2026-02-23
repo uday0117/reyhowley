@@ -41,12 +41,23 @@ class AddressController extends GetxController implements GetxService {
   }
 
   Future<void> getAddressList() async {
-    List<AddressModel>? addressList = await addressServiceInterface.getAllAddress();
-    if (addressList != null) {
+    try {
+      List<AddressModel>? addressList = await addressServiceInterface.getAllAddress();
+      if (addressList != null) {
+        _addressList = [];
+        _allAddressList = [];
+        _addressList!.addAll(addressList);
+        _allAddressList.addAll(addressList);
+      } else {
+        // API returned null, initialize empty lists
+        _addressList = [];
+        _allAddressList = [];
+      }
+    } catch (e) {
+      print('⚠️  Failed to get address list (backend API unavailable): $e');
+      // Backend API failed - initialize empty lists
       _addressList = [];
       _allAddressList = [];
-      _addressList!.addAll(addressList);
-      _allAddressList.addAll(addressList);
     }
     update();
   }

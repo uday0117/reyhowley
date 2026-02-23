@@ -83,6 +83,13 @@ class SplashController extends GetxController implements GetxService {
   bool get showPaymentIncompleteBottomSheet =>
       _showPaymentIncompleteBottomSheet;
 
+  Uri? _deeplinkRoute;
+  Uri? get deeplinkRoute => _deeplinkRoute;
+
+  void setDeeplink(Uri? uri) {
+    _deeplinkRoute = uri;
+  }
+
   void togglePaymentIncompleteBottomSheet(bool status) {
     _showPaymentIncompleteBottomSheet = status;
   }

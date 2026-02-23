@@ -72,7 +72,12 @@ class OrderController extends GetxController implements GetxService {
 
   Future<PaymentModel?> getPaymentFailedDetails(String? orderID) async {
     _paymentModel = null;
-    _paymentModel = await orderServiceInterface.getPaymentFailedDetails(orderID);
+    try {
+      _paymentModel = await orderServiceInterface.getPaymentFailedDetails(orderID);
+    } catch (e) {
+      print('⚠️  Failed to get payment failed details (backend API unavailable): $e');
+      // Backend API failed - this is expected if using Firebase-only auth
+    }
     _isLoading = false;
     update();
     return _paymentModel;
@@ -149,16 +154,24 @@ class OrderController extends GetxController implements GetxService {
         update();
       }
     }
-    PaginatedOrderModel? orderModel = await orderServiceInterface.getRunningOrderList(offset, fromDashboard);
-    if (orderModel != null) {
-      if (offset == 1) {
-        _runningOrderModel = orderModel;
-      }else {
-        _runningOrderModel!.orders!.addAll(orderModel.orders!);
-        _runningOrderModel!.offset = orderModel.offset;
-        _runningOrderModel!.totalSize = orderModel.totalSize;
+    try {
+      PaginatedOrderModel? orderModel = await orderServiceInterface.getRunningOrderList(offset, fromDashboard);
+      if (orderModel != null) {
+        if (offset == 1) {
+          _runningOrderModel = orderModel;
+        }else {
+          _runningOrderModel!.orders!.addAll(orderModel.orders!);
+          _runningOrderModel!.offset = orderModel.offset;
+          _runningOrderModel!.totalSize = orderModel.totalSize;
+        }
+        update();
       }
-      update();
+    } catch (e) {
+      print('⚠️  Failed to get running orders (backend API unavailable): $e');
+      // Backend API failed - this is expected if using Firebase-only auth
+      if (offset == 1) {
+        update();
+      }
     }
   }
 

@@ -25,10 +25,13 @@ class NotificationController extends GetxController implements GetxService {
         Iterable iterable = _notificationList!.reversed;
         _notificationList = iterable.toList() as List<NotificationModel>?;
         _hasNotification = _notificationList!.length != getSeenNotificationCount();
+      } else {
+        // Backend API failed, initialize empty list to prevent crashes
+        _notificationList = [];
       }
       update();
     }
-    return _notificationList!.length;
+    return _notificationList?.length ?? 0;
   }
 
   void saveSeenNotificationCount(int count) {

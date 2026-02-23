@@ -10,6 +10,7 @@ import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
 import 'package:reyhowley/common/widgets/demo_reset_dialog_widget.dart';
 import 'package:reyhowley/common/widgets/taxi_make_payment_bottomsheet.dart';
+import 'package:reyhowley/features/auth/controllers/auth_controller.dart';
 import 'package:reyhowley/features/chat/controllers/chat_controller.dart';
 import 'package:reyhowley/features/chat/enums/user_type_enum.dart';
 import 'package:reyhowley/features/dashboard/screens/dashboard_screen.dart';
@@ -287,6 +288,17 @@ class NotificationHelper {
           };
 
           notificationActions[notificationBody.notificationType]?.call();
+        }
+      } catch (_) {}
+    });
+
+    // Listen for FCM token refresh and update the server whenever a new token arrives.
+    // This handles the case where the initial token retrieval failed (e.g., SERVICE_NOT_AVAILABLE).
+    FirebaseMessaging.instance.onTokenRefresh.listen((String newToken) {
+      try {
+        final authController = Get.find<AuthController>();
+        if (AuthHelper.isLoggedIn() || AuthHelper.isGuestLoggedIn()) {
+          authController.updateToken();
         }
       } catch (_) {}
     });

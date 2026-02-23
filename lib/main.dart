@@ -1,9 +1,10 @@
 import 'dart:async';
 import 'dart:ui';
 
+import 'package:app_links/app_links.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show kIsWeb, kDebugMode;
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -18,6 +19,7 @@ import 'package:reyhowley/features/notification/domain/models/notification_body_
 import 'package:reyhowley/features/splash/controllers/splash_controller.dart';
 import 'package:reyhowley/helper/address_helper.dart';
 import 'package:reyhowley/helper/auth_helper.dart';
+import 'package:reyhowley/helper/link_converter_helper.dart';
 import 'package:reyhowley/helper/notification_helper.dart';
 import 'package:reyhowley/helper/responsive_helper.dart';
 import 'package:reyhowley/helper/route_helper.dart';
@@ -84,10 +86,46 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  late AppLinks _appLinks;
+  String? deeplinkRoute;
+  String? _initialRoute;
+
   @override
   void initState() {
     super.initState();
+
+    if (!GetPlatform.isWeb) {
+      _initAppLinks();
+    }
+
     _route();
+
+    _initialRoute = GetPlatform.isWeb
+        ? RouteHelper.getInitialRoute()
+        : RouteHelper.getSplashRoute(widget.body, deeplinkRoute);
+  }
+
+  void _initAppLinks() async {
+    _appLinks = AppLinks();
+
+    // Listen for any subsequent incoming links
+    _appLinks.uriLinkStream.listen(
+      (Uri? uri) {
+        if (uri != null) {
+          if (kDebugMode) {
+            print(
+              '=======Received URI: $uri and previous deeplinkRoute: ${Get.find<SplashController>().deeplinkRoute}',
+            );
+          }
+          LinkConverter.convertDeepLink(uri);
+        }
+      },
+      onError: (err) {
+        if (kDebugMode) {
+          print('catch Error in initAppLinksStream: $err');
+        }
+      },
+    );
   }
 
   void _route() async {
@@ -156,12 +194,12 @@ class _MyAppState extends State<MyApp> {
                     AppConstants.languages[0].languageCode!,
                     AppConstants.languages[0].countryCode,
                   ),
-                  initialRoute: GetPlatform.isWeb
-                      ? RouteHelper.getInitialRoute()
-                      : RouteHelper.getSplashRoute(widget.body),
+                  initialRoute: _initialRoute,
                   getPages: RouteHelper.routes,
-                  defaultTransition: Transition.topLevel,
-                  transitionDuration: const Duration(milliseconds: 500),
+                  defaultTransition: GetPlatform.isWeb
+                      ? Transition.fadeIn
+                      : Transition.topLevel,
+                  transitionDuration: const Duration(milliseconds: 700),
                   builder: (context, child) {
                     return MediaQuery(
                       data: MediaQuery.of(

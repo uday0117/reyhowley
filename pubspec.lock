@@ -17,6 +17,38 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.3.4"
+  app_links:
+    dependency: "direct main"
+    description:
+      name: app_links
+      sha256: "3462d9defc61565fde4944858b59bec5be2b9d5b05f20aed190adb3ad08a7abc"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
+  app_links_linux:
+    dependency: transitive
+    description:
+      name: app_links_linux
+      sha256: f5f7173a78609f3dfd4c2ff2c95bd559ab43c80a87dc6a095921d96c05688c81
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.3"
+  app_links_platform_interface:
+    dependency: transitive
+    description:
+      name: app_links_platform_interface
+      sha256: "05f5379577c513b534a29ddea68176a4d4802c46180ee8e2e966257158772a3f"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.2"
+  app_links_web:
+    dependency: transitive
+    description:
+      name: app_links_web
+      sha256: af060ed76183f9e2b87510a9480e56a5352b6c249778d07bd2c95fc35632a555
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.4"
   archive:
     dependency: transitive
     description:
@@ -185,6 +217,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.2"
+  cloud_firestore:
+    dependency: "direct main"
+    description:
+      name: cloud_firestore
+      sha256: fc1de79a62fe21615e9012f396070e6121838ef0d879475a4ec8320e79378208
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
+  cloud_firestore_platform_interface:
+    dependency: transitive
+    description:
+      name: cloud_firestore_platform_interface
+      sha256: "2d2ee96a32ec3dd22fb682295e9bed6336e49a43f056d7841690228adca3ee7d"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.4"
+  cloud_firestore_web:
+    dependency: transitive
+    description:
+      name: cloud_firestore_web
+      sha256: "28c39f3d050bf669787ef13fa0890df2b4af236de864e2db0cc3897b857066cb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.1.0"
   collection:
     dependency: transitive
     description:
@@ -489,6 +545,30 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "4.1.0"
+  firebase_storage:
+    dependency: "direct main"
+    description:
+      name: firebase_storage
+      sha256: "3438f38590186010ce76ece683ebf3b842cd637f31f83a13620917d7438a58fd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "13.0.4"
+  firebase_storage_platform_interface:
+    dependency: transitive
+    description:
+      name: firebase_storage_platform_interface
+      sha256: "5d56021a9d30f7ca89559c96cc4c7250ce6ff8881382ff7238fde64a1f449e39"
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.2.15"
+  firebase_storage_web:
+    dependency: transitive
+    description:
+      name: firebase_storage_web
+      sha256: a06775d1df6dd90f5fa3fe9e221b988dcbc221e73a0f8951136536e6d5e548e6
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.11.0"
   fixnum:
     dependency: transitive
     description:
@@ -976,6 +1056,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.8"
+  gtk:
+    dependency: transitive
+    description:
+      name: gtk
+      sha256: e8ce9ca4b1df106e4d72dad201d345ea1a036cc12c360f1a7d5a758f78ffa42c
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.0"
   html:
     dependency: transitive
     description:
@@ -2095,4 +2183,4 @@ packages:
     version: "3.1.2"
 sdks:
   dart: ">=3.10.0 <4.0.0"
-  flutter: ">=3.35.1"
+  flutter: ">=3.38.1"

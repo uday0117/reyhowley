@@ -261,11 +261,20 @@ class CartController extends GetxController implements GetxService {
   Future<void> getCartDataOnline() async {
     if(ModuleHelper.getModule() != null || ModuleHelper.getCacheModule() != null) {
       _isLoading = true;
-      List<OnlineCartModel>? onlineCartList = await cartServiceInterface.getCartDataOnline();
-      if(onlineCartList != null) {
+      try {
+        List<OnlineCartModel>? onlineCartList = await cartServiceInterface.getCartDataOnline();
+        if(onlineCartList != null) {
+          _cartList = [];
+          _cartList.addAll(cartServiceInterface.formatOnlineCartToLocalCart(onlineCartModel: onlineCartList));
+          calculationCart();
+        } else {
+          // API returned null, cart is empty
+          _cartList = [];
+        }
+      } catch (e) {
+        print('⚠️  Failed to get cart data online (backend API unavailable): $e');
+        // Backend API failed - initialize empty cart
         _cartList = [];
-        _cartList.addAll(cartServiceInterface.formatOnlineCartToLocalCart(onlineCartModel: onlineCartList));
-        calculationCart();
       }
       _isLoading = false;
       update();

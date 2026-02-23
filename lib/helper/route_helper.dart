@@ -1,88 +1,90 @@
 import 'dart:convert';
+
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:reyhowley/common/widgets/image_viewer_screen.dart';
+import 'package:reyhowley/common/widgets/not_found.dart';
+import 'package:reyhowley/features/address/domain/models/address_model.dart';
+import 'package:reyhowley/features/address/screens/add_address_screen.dart';
+import 'package:reyhowley/features/address/screens/address_screen.dart';
 import 'package:reyhowley/features/auth/controllers/auth_controller.dart';
+import 'package:reyhowley/features/auth/screens/delivery_man_registration_screen.dart';
 import 'package:reyhowley/features/auth/screens/new_user_setup_screen.dart';
+import 'package:reyhowley/features/auth/screens/sign_in_screen.dart';
+import 'package:reyhowley/features/auth/screens/sign_up_screen.dart';
+import 'package:reyhowley/features/auth/screens/store_registration_screen.dart';
 import 'package:reyhowley/features/brands/screens/brands_product_screen.dart';
 import 'package:reyhowley/features/brands/screens/brands_screen.dart';
 import 'package:reyhowley/features/business/screens/subscription_payment_screen.dart';
 import 'package:reyhowley/features/business/screens/subscription_success_or_failed_screen.dart';
-import 'package:reyhowley/features/chat/domain/models/order_chat_model.dart';
-import 'package:reyhowley/features/checkout/screens/digital_payment_failed_screen.dart';
-import 'package:reyhowley/features/item/screens/item_view_all_screen.dart';
-import 'package:reyhowley/features/loyalty/screens/loyalty_screen.dart';
-import 'package:reyhowley/features/profile/domain/models/update_user_model.dart';
-import 'package:reyhowley/features/profile/screens/setting_page.dart';
-import 'package:reyhowley/features/refer_and_earn/screens/refer_and_earn_screen.dart';
-import 'package:reyhowley/features/splash/controllers/splash_controller.dart';
-import 'package:reyhowley/features/notification/domain/models/notification_body_model.dart';
-import 'package:reyhowley/features/address/domain/models/address_model.dart';
-import 'package:reyhowley/features/item/domain/models/basic_campaign_model.dart';
-import 'package:reyhowley/features/chat/domain/models/conversation_model.dart';
-import 'package:reyhowley/features/order/domain/models/order_model.dart';
-import 'package:reyhowley/features/item/domain/models/item_model.dart';
-import 'package:reyhowley/features/parcel/domain/models/parcel_category_model.dart';
-import 'package:reyhowley/features/store/domain/models/store_model.dart';
-import 'package:reyhowley/features/address/screens/add_address_screen.dart';
-import 'package:reyhowley/features/address/screens/address_screen.dart';
-import 'package:reyhowley/features/auth/screens/delivery_man_registration_screen.dart';
-import 'package:reyhowley/features/auth/screens/sign_in_screen.dart';
-import 'package:reyhowley/features/auth/screens/sign_up_screen.dart';
-import 'package:reyhowley/features/auth/screens/store_registration_screen.dart';
-import 'package:reyhowley/features/category/screens/category_screen.dart';
-import 'package:reyhowley/features/location/screens/map_screen.dart';
-import 'package:reyhowley/features/store/screens/campaign_screen.dart';
-import 'package:reyhowley/helper/address_helper.dart';
-import 'package:reyhowley/helper/auth_helper.dart';
-import 'package:reyhowley/util/app_constants.dart';
-import 'package:reyhowley/util/html_type.dart';
-import 'package:reyhowley/common/widgets/image_viewer_screen.dart';
-import 'package:reyhowley/common/widgets/not_found.dart';
 import 'package:reyhowley/features/cart/screens/cart_screen.dart';
 import 'package:reyhowley/features/category/screens/category_item_screen.dart';
+import 'package:reyhowley/features/category/screens/category_screen.dart';
+import 'package:reyhowley/features/chat/domain/models/conversation_model.dart';
+import 'package:reyhowley/features/chat/domain/models/order_chat_model.dart';
 import 'package:reyhowley/features/chat/screens/chat_screen.dart';
 import 'package:reyhowley/features/chat/screens/conversation_screen.dart';
 import 'package:reyhowley/features/checkout/screens/checkout_screen.dart';
-import 'package:reyhowley/features/payment/screens/offline_payment_screen.dart';
+import 'package:reyhowley/features/checkout/screens/digital_payment_failed_screen.dart';
 import 'package:reyhowley/features/checkout/screens/order_successful_screen.dart';
-import 'package:reyhowley/features/payment/screens/payment_screen.dart';
-import 'package:reyhowley/features/payment/screens/payment_webview_screen.dart';
 import 'package:reyhowley/features/coupon/screens/coupon_screen.dart';
 import 'package:reyhowley/features/dashboard/screens/dashboard_screen.dart';
 import 'package:reyhowley/features/favourite/screens/favourite_screen.dart';
 import 'package:reyhowley/features/flash_sale/screens/flash_sale_details_screen.dart';
-import 'package:reyhowley/features/item/screens/item_campaign_screen.dart';
-import 'package:reyhowley/features/item/screens/item_details_screen.dart';
-import 'package:reyhowley/features/item/screens/popular_item_screen.dart';
-import 'package:reyhowley/features/verification/screens/forget_pass_screen.dart';
-import 'package:reyhowley/features/verification/screens/new_pass_screen.dart';
-import 'package:reyhowley/features/verification/screens/verification_screen.dart';
 import 'package:reyhowley/features/html/screens/html_viewer_screen.dart';
 import 'package:reyhowley/features/interest/screens/interest_screen.dart';
+import 'package:reyhowley/features/item/domain/models/basic_campaign_model.dart';
+import 'package:reyhowley/features/item/domain/models/item_model.dart';
+import 'package:reyhowley/features/item/screens/item_campaign_screen.dart';
+import 'package:reyhowley/features/item/screens/item_details_screen.dart';
+import 'package:reyhowley/features/item/screens/item_view_all_screen.dart';
+import 'package:reyhowley/features/item/screens/popular_item_screen.dart';
 import 'package:reyhowley/features/language/screens/language_screen.dart';
 import 'package:reyhowley/features/location/screens/access_location_screen.dart';
+import 'package:reyhowley/features/location/screens/map_screen.dart';
 import 'package:reyhowley/features/location/screens/pick_map_screen.dart';
+import 'package:reyhowley/features/loyalty/screens/loyalty_screen.dart';
+import 'package:reyhowley/features/notification/domain/models/notification_body_model.dart';
 import 'package:reyhowley/features/notification/screens/notification_screen.dart';
 import 'package:reyhowley/features/onboard/screens/onboarding_screen.dart';
+import 'package:reyhowley/features/order/domain/models/order_model.dart';
 import 'package:reyhowley/features/order/screens/guest_track_order_screen.dart';
 import 'package:reyhowley/features/order/screens/order_details_screen.dart';
 import 'package:reyhowley/features/order/screens/order_screen.dart';
 import 'package:reyhowley/features/order/screens/order_tracking_screen.dart';
 import 'package:reyhowley/features/order/screens/refund_request_screen.dart';
+import 'package:reyhowley/features/parcel/domain/models/parcel_category_model.dart';
 import 'package:reyhowley/features/parcel/screens/parcel_category_screen.dart';
 import 'package:reyhowley/features/parcel/screens/parcel_location_screen.dart';
 import 'package:reyhowley/features/parcel/screens/parcel_request_screen.dart';
+import 'package:reyhowley/features/payment/screens/offline_payment_screen.dart';
+import 'package:reyhowley/features/payment/screens/payment_screen.dart';
+import 'package:reyhowley/features/payment/screens/payment_webview_screen.dart';
+import 'package:reyhowley/features/profile/domain/models/update_user_model.dart';
 import 'package:reyhowley/features/profile/screens/profile_screen.dart';
+import 'package:reyhowley/features/profile/screens/setting_page.dart';
 import 'package:reyhowley/features/profile/screens/update_profile_screen.dart';
-import 'package:reyhowley/features/store/screens/all_store_screen.dart';
-import 'package:reyhowley/features/store/screens/store_item_search_screen.dart';
-import 'package:reyhowley/features/store/screens/store_screen.dart';
+import 'package:reyhowley/features/refer_and_earn/screens/refer_and_earn_screen.dart';
 import 'package:reyhowley/features/review/screens/review_screen.dart';
 import 'package:reyhowley/features/search/screens/search_screen.dart';
+import 'package:reyhowley/features/splash/controllers/splash_controller.dart';
 import 'package:reyhowley/features/splash/screens/splash_screen.dart';
+import 'package:reyhowley/features/store/domain/models/store_model.dart';
+import 'package:reyhowley/features/store/screens/all_store_screen.dart';
+import 'package:reyhowley/features/store/screens/campaign_screen.dart';
+import 'package:reyhowley/features/store/screens/store_item_search_screen.dart';
+import 'package:reyhowley/features/store/screens/store_screen.dart';
 import 'package:reyhowley/features/support/screens/support_screen.dart';
 import 'package:reyhowley/features/update/screens/update_screen.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
+import 'package:reyhowley/features/verification/screens/forget_pass_screen.dart';
+import 'package:reyhowley/features/verification/screens/new_pass_screen.dart';
+import 'package:reyhowley/features/verification/screens/verification_screen.dart';
 import 'package:reyhowley/features/wallet/screens/wallet_screen.dart';
+import 'package:reyhowley/helper/address_helper.dart';
+import 'package:reyhowley/helper/auth_helper.dart';
+import 'package:reyhowley/helper/module_helper.dart';
+import 'package:reyhowley/util/app_constants.dart';
+import 'package:reyhowley/util/html_type.dart';
 
 class RouteHelper {
   static const String initial = '/';
@@ -156,19 +158,23 @@ class RouteHelper {
   static const String digitalPaymentFailedScreen = '/digital-payment-failed-screen';
 
 
-  static String getInitialRoute({bool fromSplash = false}) => '$initial?from-splash=$fromSplash';
-  static String getSplashRoute(NotificationBodyModel? body) {
+  static String getInitialRoute({bool fromSplash = false, String? moduleId, bool fromDeeplink = false}) {
+    String modId = moduleId ?? ModuleHelper.getModule()?.id.toString() ?? ModuleHelper.getCacheModule()?.id.toString() ?? '';
+    return '$initial?module=$modId&from-splash=$fromSplash${fromDeeplink ? '&from_deeplink=true' : ''}';
+  }
+  static String getSplashRoute(NotificationBodyModel? body, String? deeplink) {
     String data = 'null';
     if(body != null) {
       List<int> encoded = utf8.encode(jsonEncode(body.toJson()));
       data = base64Encode(encoded);
     }
-    return '$splash?data=$data';
+    print('=======splash screen calling-------------: $splash?data=$data&deeplink=$deeplink');
+    return '$splash?data=$data&deeplink=$deeplink';
   }
   static String getLanguageRoute(String page) => '$language?page=$page';
   static String getOnBoardingRoute() => onBoarding;
   static String getSignInRoute(String page) => '$signIn?page=$page';
-  static String getSignUpRoute() => signUp;
+  static String getSignUpRoute({String? deeplinkCode}) => '$signUp?code=$deeplinkCode';
   static String getVerificationRoute(String? number, String? email, String? token, String page, String? pass, String loginType, {String? session, UpdateUserModel? updateUserModel, bool? backFromThis}) {
     String? authSession;
     String? userModel;
@@ -188,9 +194,14 @@ class RouteHelper {
   static String getMainRoute(String page) => '$main?page=$page';
   static String getForgotPassRoute() => forgotPassword;
   static String getResetPasswordRoute({String? phone, String? email, required String token, required String page}) => '$resetPassword?phone=$phone&token=$token&page=$page&email=$email';
-  static String getSearchRoute({String? queryText}) => '$search?query=${queryText ?? ''}';
-  static String getStoreRoute({required int? id, required String page}) {
-    return '$store?id=$id&page=$page';
+  static String getSearchRoute({String? queryText}) {
+    String modId = ModuleHelper.getModule()?.id.toString() ?? '';
+    return '$search?query=${queryText ?? ''}&module=$modId';
+  }
+
+  static String getStoreRoute({required int? id, required String page, required String slug, String? moduleId, bool fromDeeplink = false}) {
+    String modId = moduleId ?? ModuleHelper.getModule()?.id.toString() ?? '';
+    return '$store/$slug?id=$id&page=$page&module=$modId${fromDeeplink ? '&from_deeplink=true' : ''}';
   }
   static String getOrderDetailsRoute(int? orderID, {bool? fromNotification, bool? fromOffline, String? contactNumber}) {
     return '$orderDetails?id=$orderID&from=${fromNotification.toString()}&from_offline=$fromOffline&contact=$contactNumber';
@@ -259,10 +270,23 @@ class RouteHelper {
   }
   static String getSearchStoreItemRoute(int? storeID) => '$searchStoreItem?id=$storeID';
   static String getOrderRoute() => order;
-  static String getItemDetailsRoute(int? itemID, bool isRestaurant) => '$itemDetails?id=$itemID&page=${isRestaurant ? 'restaurant' : 'item'}';
+  static String getItemDetailsRoute(int? itemID, bool isRestaurant, String name, {String? moduleId, required String slug, bool fromDeeplink = false, bool isCampaign = false}) {
+    String itemSlug = '';
+    if(slug.isEmpty) {
+      itemSlug = name.toLowerCase()
+          .replaceAll(RegExp(r'[^a-z0-9\s-]'), '')
+          .replaceAll(RegExp(r'\s+'), '-')
+          .replaceAll(RegExp(r'-+'), '-')
+          .trim();
+    } else {
+      itemSlug = slug;
+    }
+    String modId = moduleId ?? ModuleHelper.getModule()?.id.toString() ?? '';
+    return '$itemDetails/$itemSlug?id=$itemID&page=${isRestaurant ? 'restaurant' : 'item'}&module=$modId${fromDeeplink ? '&from_deeplink=true' : ''}&is_campaign=$isCampaign';
+  }
   static String getWalletRoute({String? fundStatus, String? token,  bool fromNotification = false}) => '$wallet?payment_status=$fundStatus&token=$token&from_notification=$fromNotification';
   static String getLoyaltyRoute({bool fromNotification = false}) => '$loyalty?from_notification=$fromNotification';
-  static String getReferAndEarnRoute() => referAndEarn;
+  static String getReferAndEarnRoute({String? code}) => '$referAndEarn?code=$code';
   static String getChatRoute({required NotificationBodyModel? notificationBody, User? user, int? conversationID, int? index, bool? fromNotification, OrderChatModel? orderChatModel}) {
     String notificationBody0 = 'null';
     if(notificationBody != null) {

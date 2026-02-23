@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 import 'package:reyhowley/common/models/response_model.dart';
 import 'package:reyhowley/common/widgets/custom_ink_well.dart';
 import 'package:reyhowley/common/widgets/custom_snackbar.dart';
@@ -22,290 +21,486 @@ import 'package:reyhowley/util/app_constants.dart';
 import 'package:reyhowley/util/dimensions.dart';
 import 'package:reyhowley/util/images.dart';
 import 'package:reyhowley/util/styles.dart';
+import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 class SocialLoginWidget extends StatelessWidget {
   final bool onlySocialLogin;
   final bool showWelcomeText;
   final Function()? onOtpViewClick;
   final bool backFromThis;
-  const SocialLoginWidget({super.key, this.onlySocialLogin = false, this.showWelcomeText = true, this.onOtpViewClick, required this.backFromThis});
+  const SocialLoginWidget({
+    super.key,
+    this.onlySocialLogin = false,
+    this.showWelcomeText = true,
+    this.onOtpViewClick,
+    required this.backFromThis,
+  });
 
   @override
   Widget build(BuildContext context) {
     final GoogleSignIn googleSignIn = GoogleSignIn.instance;
 
-    bool canAppleLogin = Get.find<SplashController>().configModel!.appleLogin!.isNotEmpty && Get.find<SplashController>().configModel!.appleLogin![0].status!
-    && !GetPlatform.isAndroid;
+    bool canAppleLogin =
+        Get.find<SplashController>().configModel!.appleLogin!.isNotEmpty &&
+        Get.find<SplashController>().configModel!.appleLogin![0].status! &&
+        !GetPlatform.isAndroid;
 
-    bool canGoogleAndFacebookLogin = Get.find<SplashController>().configModel!.socialLogin!.isNotEmpty && (Get.find<SplashController>().configModel!.socialLogin![0].status!
-        || Get.find<SplashController>().configModel!.socialLogin![1].status!);
+    bool canGoogleAndFacebookLogin =
+        Get.find<SplashController>().configModel!.socialLogin!.isNotEmpty &&
+        (Get.find<SplashController>().configModel!.socialLogin![0].status! ||
+            Get.find<SplashController>().configModel!.socialLogin![1].status!);
 
-    bool googleLoginActive = Get.find<SplashController>().configModel!.socialLogin![0].status! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.socialLoginStatus!
-    && Get.find<SplashController>().configModel!.centralizeLoginSetup!.googleLoginStatus!;
+    bool googleLoginActive =
+        Get.find<SplashController>().configModel!.socialLogin![0].status! &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .socialLoginStatus! &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .googleLoginStatus!;
 
-    bool facebookLoginActive = Get.find<SplashController>().configModel!.socialLogin![1].status! && Get.find<SplashController>().configModel!.centralizeLoginSetup!.socialLoginStatus!
-    && Get.find<SplashController>().configModel!.centralizeLoginSetup!.facebookLoginStatus!;
+    bool facebookLoginActive =
+        Get.find<SplashController>().configModel!.socialLogin![1].status! &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .socialLoginStatus! &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .facebookLoginStatus!;
 
-    bool appleLoginActive = canAppleLogin && Get.find<SplashController>().configModel!.centralizeLoginSetup!.socialLoginStatus!
-    && Get.find<SplashController>().configModel!.centralizeLoginSetup!.appleLoginStatus!;
+    bool appleLoginActive =
+        canAppleLogin &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .socialLoginStatus! &&
+        Get.find<SplashController>()
+            .configModel!
+            .centralizeLoginSetup!
+            .appleLoginStatus!;
 
-    if(onlySocialLogin) {
+    if (onlySocialLogin) {
       return Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          canGoogleAndFacebookLogin ? Column(children: [
+          canGoogleAndFacebookLogin
+              ? Column(
+                  children: [
+                    showWelcomeText
+                        ? Text(
+                            '${'welcome_to'.tr} ${AppConstants.appName}',
+                            style: robotoMedium.copyWith(
+                              fontSize: Dimensions.fontSizeLarge,
+                            ),
+                          )
+                        : const SizedBox(),
+                    const SizedBox(height: Dimensions.paddingSizeLarge),
 
-            showWelcomeText ? Text('${'welcome_to'.tr} ${AppConstants.appName}', style: robotoMedium.copyWith(fontSize: Dimensions.fontSizeLarge)) : const SizedBox(),
-            const SizedBox(height: Dimensions.paddingSizeLarge),
+                    googleLoginActive
+                        ? Container(
+                            height: 50,
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(Dimensions.radiusDefault),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      Colors.grey[Get.isDarkMode ? 700 : 300]!,
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: CustomInkWell(
+                              onTap: () => _googleLogin(googleSignIn),
+                              radius: Dimensions.radiusDefault,
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Images.google,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(
+                                      width: Dimensions.paddingSizeSmall,
+                                    ),
 
-            googleLoginActive ? Container(
-              height: 50,
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-              ),
-              child: CustomInkWell(
-                onTap: ()=> _googleLogin(googleSignIn),
-                radius: Dimensions.radiusDefault,
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Image.asset(Images.google, height: 20, width: 20),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
+                                    Text(
+                                      'continue_with_google'.tr,
+                                      style: robotoMedium.copyWith(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                      height: googleLoginActive
+                          ? Dimensions.paddingSizeLarge
+                          : 0,
+                    ),
 
-                    Text('continue_with_google'.tr, style: robotoMedium.copyWith()),
-                  ]),
-                ),
-              ),
-            ) : const SizedBox(),
-            SizedBox(height: googleLoginActive ? Dimensions.paddingSizeLarge : 0),
+                    facebookLoginActive
+                        ? Container(
+                            height: 50,
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(Dimensions.radiusDefault),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      Colors.grey[Get.isDarkMode ? 700 : 300]!,
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: CustomInkWell(
+                              onTap: () => _facebookLogin(),
+                              radius: Dimensions.radiusDefault,
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Images.socialFacebook,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(
+                                      width: Dimensions.paddingSizeSmall,
+                                    ),
 
-            facebookLoginActive ? Container(
-              height: 50,
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-              ),
-              child: CustomInkWell(
-                onTap: ()=> _facebookLogin(),
-                radius: Dimensions.radiusDefault,
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Image.asset(Images.socialFacebook, height: 20, width: 20),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
+                                    Text(
+                                      'continue_with_facebook'.tr,
+                                      style: robotoMedium.copyWith(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                      height: facebookLoginActive
+                          ? Dimensions.paddingSizeLarge
+                          : 0,
+                    ),
 
-                    Text('continue_with_facebook'.tr, style: robotoMedium.copyWith()),
-                  ]),
-                ),
-              ),
-            ) : const SizedBox(),
-            SizedBox(height: facebookLoginActive ? Dimensions.paddingSizeLarge : 0),
+                    appleLoginActive
+                        ? Container(
+                            height: 50,
+                            padding: const EdgeInsets.all(1),
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).cardColor,
+                              borderRadius: const BorderRadius.all(
+                                Radius.circular(Dimensions.radiusDefault),
+                              ),
+                              boxShadow: [
+                                BoxShadow(
+                                  color:
+                                      Colors.grey[Get.isDarkMode ? 700 : 300]!,
+                                  spreadRadius: 1,
+                                  blurRadius: 5,
+                                  offset: const Offset(2, 2),
+                                ),
+                              ],
+                            ),
+                            child: CustomInkWell(
+                              onTap: () => _appleLogin(),
+                              radius: Dimensions.radiusDefault,
+                              child: Padding(
+                                padding: const EdgeInsets.all(
+                                  Dimensions.paddingSizeSmall,
+                                ),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    Image.asset(
+                                      Images.appleLogo,
+                                      height: 20,
+                                      width: 20,
+                                    ),
+                                    const SizedBox(
+                                      width: Dimensions.paddingSizeSmall,
+                                    ),
 
-            appleLoginActive ? Container(
-              height: 50,
-              padding: const EdgeInsets.all(1),
-              decoration: BoxDecoration(
-                color: Theme.of(context).cardColor,
-                borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-                boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-              ),
-              child: CustomInkWell(
-                onTap: ()=> _appleLogin(),
-                radius: Dimensions.radiusDefault,
-                child: Padding(
-                  padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                  child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                    Image.asset(Images.appleLogo, height: 20, width: 20),
-                    const SizedBox(width: Dimensions.paddingSizeSmall),
+                                    Text(
+                                      'continue_with_apple'.tr,
+                                      style: robotoMedium.copyWith(),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          )
+                        : const SizedBox(),
+                    SizedBox(
+                      height: ResponsiveHelper.isDesktop(context)
+                          ? Dimensions.paddingSizeLarge
+                          : onOtpViewClick != null
+                          ? 0
+                          : Dimensions.paddingSizeLarge,
+                    ),
+                  ],
+                )
+              : const SizedBox(),
 
-                    Text('continue_with_apple'.tr, style: robotoMedium.copyWith()),
-                  ]),
-                ),
-              ),
-            ) : const SizedBox(),
-            SizedBox(height: ResponsiveHelper.isDesktop(context) ? Dimensions.paddingSizeLarge : onOtpViewClick != null ? 0 : Dimensions.paddingSizeLarge),
+          onOtpViewClick != null
+              ? Container(
+                  height: 50,
+                  padding: const EdgeInsets.all(1),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).cardColor,
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(Dimensions.radiusDefault),
+                    ),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.grey[Get.isDarkMode ? 700 : 300]!,
+                        spreadRadius: 1,
+                        blurRadius: 5,
+                        offset: const Offset(2, 2),
+                      ),
+                    ],
+                  ),
+                  margin: const EdgeInsets.only(
+                    bottom: Dimensions.paddingSizeExtremeLarge,
+                  ),
+                  child: CustomInkWell(
+                    onTap: onOtpViewClick!,
+                    radius: Dimensions.radiusDefault,
+                    child: Padding(
+                      padding: const EdgeInsets.all(
+                        Dimensions.paddingSizeSmall,
+                      ),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(Images.otp, height: 20, width: 20),
+                          const SizedBox(width: Dimensions.paddingSizeSmall),
 
-          ]) : const SizedBox(),
-
-          onOtpViewClick != null ? Container(
-            height: 50,
-            padding: const EdgeInsets.all(1),
-            decoration: BoxDecoration(
-              color: Theme.of(context).cardColor,
-              borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-              boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-            ),
-            margin: const EdgeInsets.only(bottom: Dimensions.paddingSizeExtremeLarge),
-            child: CustomInkWell(
-              onTap: onOtpViewClick!,
-              radius: Dimensions.radiusDefault,
-              child: Padding(
-                padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                  Image.asset(Images.otp, height: 20, width: 20),
-                  const SizedBox(width: Dimensions.paddingSizeSmall),
-
-                  Text('otp_sign_in'.tr, style: robotoMedium.copyWith()),
-                ]),
-              ),
-            ),
-          ) : const SizedBox(),
+                          Text(
+                            'otp_sign_in'.tr,
+                            style: robotoMedium.copyWith(),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )
+              : const SizedBox(),
         ],
       );
     }
 
-    return canGoogleAndFacebookLogin || canAppleLogin ? Column(children: [
+    return canGoogleAndFacebookLogin || canAppleLogin
+        ? Column(
+            children: [
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
-      const SizedBox(height: Dimensions.paddingSizeSmall),
+              Padding(
+                padding: const EdgeInsets.symmetric(
+                  vertical: Dimensions.paddingSizeSmall,
+                ),
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: Dimensions.paddingSizeSmall,
+                      ),
+                      child: Text(
+                        'or_continue_with'.tr,
+                        style: robotoMedium.copyWith(
+                          color: Theme.of(context).disabledColor,
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        height: 1,
+                        color: Theme.of(context).disabledColor,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
 
-      Padding(
-        padding: const EdgeInsets.symmetric(vertical: Dimensions.paddingSizeSmall),
-        child: Row(children: [
-          Expanded(child: Container(height: 1, color: Theme.of(context).disabledColor)),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: Dimensions.paddingSizeSmall),
-            child: Text('or_continue_with'.tr, style: robotoMedium.copyWith(color: Theme.of(context).disabledColor)),
-          ),
-          Expanded(child: Container(height: 1, color: Theme.of(context).disabledColor)),
-        ]),
-      ),
-      const SizedBox(height: Dimensions.paddingSizeSmall),
+              Wrap(
+                spacing: 15,
+                runSpacing: 15,
+                children: [
+                  if (facebookLoginActive)
+                    SocialLoginButton(
+                      iconPath: Images.facebook2,
+                      label: 'facebook'.tr,
+                      onTap: () {
+                        if (ResponsiveHelper.isDesktop(context)) {
+                          Get.back();
+                        }
+                        _facebookLogin();
+                      },
+                    ),
 
-      Wrap(spacing: 15, runSpacing: 15, children: [
-        if(facebookLoginActive)
-          SocialLoginButton(
-            iconPath: Images.facebook2,
-            label: 'facebook'.tr,
-            onTap: () {
-              if(ResponsiveHelper.isDesktop(context)) {
-                Get.back();
-              }
-              _facebookLogin();
-            },
-          ),
+                  if (googleLoginActive)
+                    SocialLoginButton(
+                      iconPath: Images.google,
+                      label: 'google'.tr,
+                      onTap: () {
+                        if (ResponsiveHelper.isDesktop(context)) {
+                          Get.back();
+                        }
+                        _googleLogin(googleSignIn);
+                      },
+                    ),
 
-        if(googleLoginActive)
-          SocialLoginButton(
-            iconPath: Images.google,
-            label: 'google'.tr,
-            onTap: () {
-              if(ResponsiveHelper.isDesktop(context)) {
-                Get.back();
-              }
-              _googleLogin(googleSignIn);
-            },
-          ),
+                  if (appleLoginActive)
+                    SocialLoginButton(
+                      iconPath: Images.appleLogo,
+                      label: 'apple'.tr,
+                      onTap: () {
+                        if (ResponsiveHelper.isDesktop(context)) {
+                          Get.back();
+                        }
+                        _appleLogin();
+                      },
+                    ),
+                ],
+              ),
 
-        if(appleLoginActive)
-          SocialLoginButton(
-            iconPath: Images.appleLogo,
-            label: 'apple'.tr,
-            onTap: () {
-              if(ResponsiveHelper.isDesktop(context)) {
-                Get.back();
-              }
-              _appleLogin();
-            },
-          ),
-      ]),
-
-      // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-      //
-      //   googleLoginActive ? InkWell(
-      //     onTap: () => _googleLogin(googleSignIn),
-      //     child: Container(
-      //       height: 40,width: 40,
-      //       padding: const EdgeInsets.all(1),
-      //       decoration: BoxDecoration(
-      //         color: Theme.of(context).cardColor,
-      //         borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-      //         boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-      //       ),
-      //       child: CustomInkWell(
-      //         radius: Dimensions.radiusDefault,
-      //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      //         onTap: () => _googleLogin(googleSignIn),
-      //         child: Image.asset(Images.google),
-      //       ),
-      //     ),
-      //   ) : const SizedBox(),
-      //
-      //   facebookLoginActive ? Padding(
-      //     padding: EdgeInsets.only(left: Get.find<LocalizationController>().isLtr ? Dimensions.paddingSizeLarge : 0, right: Get.find<LocalizationController>().isLtr ? 0 : Dimensions.paddingSizeLarge),
-      //     child: InkWell(
-      //       onTap: () => _facebookLogin(),
-      //       child: Container(
-      //         height: 40, width: 40,
-      //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      //         decoration: BoxDecoration(
-      //           color: Theme.of(context).cardColor,
-      //           borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-      //           boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-      //         ),
-      //         child: Image.asset(Images.socialFacebook),
-      //       ),
-      //     ),
-      //   ) : const SizedBox(),
-      //
-      //   appleLoginActive ? Padding(
-      //     padding: const EdgeInsets.only(left: Dimensions.paddingSizeLarge),
-      //     child: InkWell(
-      //       onTap: ()=> _appleLogin(),
-      //       child: Container(
-      //         height: 40, width: 40,
-      //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
-      //         decoration: BoxDecoration(
-      //           color: Theme.of(context).cardColor,
-      //           borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
-      //           boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
-      //         ),
-      //         child: Image.asset(Images.appleLogo),
-      //       ),
-      //     ),
-      //   ) : const SizedBox(),
-      //
-      // ]),
-      const SizedBox(height: Dimensions.paddingSizeSmall),
-
-    ]) : const SizedBox();
+              // Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              //
+              //   googleLoginActive ? InkWell(
+              //     onTap: () => _googleLogin(googleSignIn),
+              //     child: Container(
+              //       height: 40,width: 40,
+              //       padding: const EdgeInsets.all(1),
+              //       decoration: BoxDecoration(
+              //         color: Theme.of(context).cardColor,
+              //         borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
+              //         boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
+              //       ),
+              //       child: CustomInkWell(
+              //         radius: Dimensions.radiusDefault,
+              //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              //         onTap: () => _googleLogin(googleSignIn),
+              //         child: Image.asset(Images.google),
+              //       ),
+              //     ),
+              //   ) : const SizedBox(),
+              //
+              //   facebookLoginActive ? Padding(
+              //     padding: EdgeInsets.only(left: Get.find<LocalizationController>().isLtr ? Dimensions.paddingSizeLarge : 0, right: Get.find<LocalizationController>().isLtr ? 0 : Dimensions.paddingSizeLarge),
+              //     child: InkWell(
+              //       onTap: () => _facebookLogin(),
+              //       child: Container(
+              //         height: 40, width: 40,
+              //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              //         decoration: BoxDecoration(
+              //           color: Theme.of(context).cardColor,
+              //           borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
+              //           boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
+              //         ),
+              //         child: Image.asset(Images.socialFacebook),
+              //       ),
+              //     ),
+              //   ) : const SizedBox(),
+              //
+              //   appleLoginActive ? Padding(
+              //     padding: const EdgeInsets.only(left: Dimensions.paddingSizeLarge),
+              //     child: InkWell(
+              //       onTap: ()=> _appleLogin(),
+              //       child: Container(
+              //         height: 40, width: 40,
+              //         padding: const EdgeInsets.all(Dimensions.paddingSizeSmall),
+              //         decoration: BoxDecoration(
+              //           color: Theme.of(context).cardColor,
+              //           borderRadius: const BorderRadius.all(Radius.circular(Dimensions.radiusDefault)),
+              //           boxShadow: [BoxShadow(color: Colors.grey[Get.isDarkMode ? 700 : 300]!, spreadRadius: 1, blurRadius: 5, offset: const Offset(2, 2))],
+              //         ),
+              //         child: Image.asset(Images.appleLogo),
+              //       ),
+              //     ),
+              //   ) : const SizedBox(),
+              //
+              // ]),
+              const SizedBox(height: Dimensions.paddingSizeSmall),
+            ],
+          )
+        : const SizedBox();
   }
 
   void _googleLogin(GoogleSignIn googleSignIn) async {
-    if(kIsWeb) {
+    if (kIsWeb) {
       await _googleWebSignIn();
+    } else {
+      try {
+        if (googleSignIn.supportsAuthenticate()) {
+          await googleSignIn
+              .initialize(serverClientId: AppConstants.googleServerClientId)
+              .then((_) async {
+                googleSignIn.signOut();
+                GoogleSignInAccount googleAccount = await googleSignIn
+                    .authenticate();
+                const List<String> scopes = <String>['email'];
+                GoogleSignInClientAuthorization? auth = await googleAccount
+                    .authorizationClient
+                    .authorizationForScopes(scopes);
+                OAuthCredential credential = GoogleAuthProvider.credential(
+                  accessToken: auth?.accessToken,
+                );
+                UserCredential userCredential = await FirebaseAuth.instance
+                    .signInWithCredential(credential);
+                if (userCredential.user == null) {
+                  showCustomSnackBar('Social login failed.');
+                  return;
+                }
 
-    }else{
-      try{
-        if(googleSignIn.supportsAuthenticate()) {
-          await googleSignIn.initialize(serverClientId: AppConstants.googleServerClientId).then((_) async {
-
-            googleSignIn.signOut();
-            GoogleSignInAccount googleAccount = await googleSignIn.authenticate();
-            const List<String> scopes = <String>['email'];
-            GoogleSignInClientAuthorization? auth = await googleAccount.authorizationClient.authorizationForScopes(scopes);
-
-            SocialLogInBody googleBodyModel = SocialLogInBody(
-              email: googleAccount.email, token: auth?.accessToken, uniqueId: googleAccount.id,
-              medium: 'google', accessToken: 1, loginType: CentralizeLoginType.social.name,
-            );
-
-            Get.find<AuthController>().loginWithSocialMedia(googleBodyModel).then((response) {
-              if (response.isSuccess) {
-                _processSocialSuccessSetup(response, googleBodyModel, null, null);
-              } else {
-                showCustomSnackBar(response.message);
-              }
-            });
-          });
-        }else {
+                Get.find<AuthController>()
+                    .loginWithFirebaseUser(
+                      userCredential.user!,
+                      loginType: CentralizeLoginType.social.name,
+                    )
+                    .then((response) {
+                      if (response.isSuccess) {
+                        _processSocialSuccessSetup(response, null, null, null);
+                      } else {
+                        showCustomSnackBar(response.message);
+                      }
+                    });
+              });
+        } else {
           debugPrint("Google Sign-In not supported on this device.");
         }
-      }catch(e){
+      } catch (e) {
         debugPrint('Error in google sign in: $e');
       }
     }
@@ -316,123 +511,198 @@ class SocialLoginWidget extends StatelessWidget {
 
     try {
       GoogleAuthProvider googleProvider = GoogleAuthProvider();
-      UserCredential userCredential = await auth.signInWithPopup(googleProvider);
-
-      SocialLogInBody googleBodyModel =  SocialLogInBody(
-        uniqueId: userCredential.credential?.accessToken,
-        token: userCredential.credential?.accessToken,
-        accessToken: 1,
-        medium: 'google',
-        email: userCredential.user?.email,
-        loginType: CentralizeLoginType.social.name,
+      UserCredential userCredential = await auth.signInWithPopup(
+        googleProvider,
       );
 
-      Get.find<AuthController>().loginWithSocialMedia(googleBodyModel).then((response) {
-        if (response.isSuccess) {
-          _processSocialSuccessSetup(response, googleBodyModel, null, null);
-        } else {
-          showCustomSnackBar(response.message);
-        }
-      });
+      if (userCredential.user == null) {
+        showCustomSnackBar('Social login failed.');
+        return;
+      }
 
+      Get.find<AuthController>()
+          .loginWithFirebaseUser(
+            userCredential.user!,
+            loginType: CentralizeLoginType.social.name,
+          )
+          .then((response) {
+            if (response.isSuccess) {
+              _processSocialSuccessSetup(response, null, null, null);
+            } else {
+              showCustomSnackBar(response.message);
+            }
+          });
     } catch (e) {
       showCustomSnackBar(e.toString());
     }
   }
 
   void _facebookLogin() async {
-    LoginResult result = await FacebookAuth.instance.login(permissions: ["public_profile", "email"]);
+    LoginResult result = await FacebookAuth.instance.login(
+      permissions: ["public_profile", "email"],
+    );
     if (result.status == LoginStatus.success) {
-      Map userData = await FacebookAuth.instance.getUserData();
-
-      SocialLogInBody facebookBodyModel = SocialLogInBody(
-        email: userData['email'], token: result.accessToken!.tokenString, uniqueId: userData['id'],
-        medium: 'facebook', loginType: CentralizeLoginType.social.name,
+      OAuthCredential credential = FacebookAuthProvider.credential(
+        result.accessToken!.tokenString,
       );
+      UserCredential userCredential = await FirebaseAuth.instance
+          .signInWithCredential(credential);
+      if (userCredential.user == null) {
+        showCustomSnackBar('Social login failed.');
+        return;
+      }
 
-      Get.find<AuthController>().loginWithSocialMedia(facebookBodyModel).then((response) {
-        if (response.isSuccess) {
-          _processSocialSuccessSetup(response, null, null, facebookBodyModel);
-        } else {
-          showCustomSnackBar(response.message);
-        }
-      });
+      Get.find<AuthController>()
+          .loginWithFirebaseUser(
+            userCredential.user!,
+            loginType: CentralizeLoginType.social.name,
+          )
+          .then((response) {
+            if (response.isSuccess) {
+              _processSocialSuccessSetup(response, null, null, null);
+            } else {
+              showCustomSnackBar(response.message);
+            }
+          });
     }
   }
 
   void _appleLogin() async {
-    String clientID = Get.find<SplashController>().configModel!.appleLogin![0].clientId!;
-    String redirectURL = Get.find<SplashController>().configModel!.appleLogin![0].redirectUrl!;
+    String clientID =
+        Get.find<SplashController>().configModel!.appleLogin![0].clientId!;
+    String redirectURL =
+        Get.find<SplashController>().configModel!.appleLogin![0].redirectUrl!;
 
     final credential = await SignInWithApple.getAppleIDCredential(
       scopes: [
         AppleIDAuthorizationScopes.email,
         AppleIDAuthorizationScopes.fullName,
       ],
-      webAuthenticationOptions: GetPlatform.isIOS ? null : WebAuthenticationOptions(
-        clientId: clientID,
-        redirectUri: Uri.parse(redirectURL),
-      ),
+      webAuthenticationOptions: GetPlatform.isIOS
+          ? null
+          : WebAuthenticationOptions(
+              clientId: clientID,
+              redirectUri: Uri.parse(redirectURL),
+            ),
     );
 
-    SocialLogInBody appleBodyModel = SocialLogInBody(
-      email: credential.email, token: credential.authorizationCode, uniqueId: credential.authorizationCode,
-      medium: 'apple', loginType: CentralizeLoginType.social.name, platform: GetPlatform.isIOS ? 'flutter_app' : 'flutter_web',
+    OAuthCredential oauthCredential = OAuthProvider("apple.com").credential(
+      idToken: credential.identityToken,
+      accessToken: credential.authorizationCode,
     );
 
-    Get.find<AuthController>().loginWithSocialMedia(appleBodyModel).then((response) {
-      if (response.isSuccess) {
-        _processSocialSuccessSetup(response, null, appleBodyModel, null);
-      } else {
-        showCustomSnackBar(response.message);
-      }
-    });
+    UserCredential userCredential = await FirebaseAuth.instance
+        .signInWithCredential(oauthCredential);
+    if (userCredential.user == null) {
+      showCustomSnackBar('Social login failed.');
+      return;
+    }
+
+    Get.find<AuthController>()
+        .loginWithFirebaseUser(
+          userCredential.user!,
+          loginType: CentralizeLoginType.social.name,
+        )
+        .then((response) {
+          if (response.isSuccess) {
+            _processSocialSuccessSetup(response, null, null, null);
+          } else {
+            showCustomSnackBar(response.message);
+          }
+        });
   }
 
-  Future<void> _processSocialSuccessSetup(ResponseModel response, SocialLogInBody? googleBodyModel, SocialLogInBody? appleBodyModel, SocialLogInBody? facebookBodyModel) async {
-    String? email = googleBodyModel != null ? googleBodyModel.email : appleBodyModel != null ? appleBodyModel.email : facebookBodyModel?.email;
-    if(response.isSuccess && response.authResponseModel != null && response.authResponseModel!.isExistUser != null) {
-      if(appleBodyModel != null) {
+  Future<void> _processSocialSuccessSetup(
+    ResponseModel response,
+    SocialLogInBody? googleBodyModel,
+    SocialLogInBody? appleBodyModel,
+    SocialLogInBody? facebookBodyModel,
+  ) async {
+    String? email = googleBodyModel != null
+        ? googleBodyModel.email
+        : appleBodyModel != null
+        ? appleBodyModel.email
+        : facebookBodyModel?.email;
+    if (response.isSuccess &&
+        response.authResponseModel != null &&
+        response.authResponseModel!.isExistUser != null) {
+      if (appleBodyModel != null) {
         email = response.authResponseModel!.email;
         appleBodyModel.email = email;
       }
-      if(ResponsiveHelper.isDesktop(Get.context)) {
+      if (ResponsiveHelper.isDesktop(Get.context)) {
         Get.back();
-        Get.dialog(Center(
-          child: ExistingUserBottomSheet(
-            userModel: response.authResponseModel!.isExistUser!, email: email, loginType: CentralizeLoginType.social.name,
-            socialLogInBodyModel: googleBodyModel ?? appleBodyModel ?? facebookBodyModel, backFromThis: backFromThis,
+        Get.dialog(
+          Center(
+            child: ExistingUserBottomSheet(
+              userModel: response.authResponseModel!.isExistUser!,
+              email: email,
+              loginType: CentralizeLoginType.social.name,
+              socialLogInBodyModel:
+                  googleBodyModel ?? appleBodyModel ?? facebookBodyModel,
+              backFromThis: backFromThis,
+            ),
           ),
-        ));
+        );
       } else {
-        Get.bottomSheet(ExistingUserBottomSheet(
-          userModel: response.authResponseModel!.isExistUser!, loginType: CentralizeLoginType.social.name,
-          socialLogInBodyModel: googleBodyModel ?? appleBodyModel ?? facebookBodyModel, email: email, backFromThis: backFromThis,
-        ));
+        Get.bottomSheet(
+          ExistingUserBottomSheet(
+            userModel: response.authResponseModel!.isExistUser!,
+            loginType: CentralizeLoginType.social.name,
+            socialLogInBodyModel:
+                googleBodyModel ?? appleBodyModel ?? facebookBodyModel,
+            email: email,
+            backFromThis: backFromThis,
+          ),
+        );
       }
-    } else if(response.isSuccess && response.authResponseModel != null && !response.authResponseModel!.isPersonalInfo!) {
+    } else if (response.isSuccess &&
+        response.authResponseModel != null &&
+        !response.authResponseModel!.isPersonalInfo!) {
+      String? displayName = googleBodyModel != null
+          ? googleBodyModel.email?.split('@')[0]
+          : appleBodyModel != null
+          ? appleBodyModel.email?.split('@')[0]
+          : facebookBodyModel?.email?.split('@')[0];
 
-      String? displayName = googleBodyModel != null ? googleBodyModel.email?.split('@')[0] : appleBodyModel != null ? appleBodyModel.email?.split('@')[0] : facebookBodyModel?.email?.split('@')[0];
-
-      if(appleBodyModel != null) {
+      if (appleBodyModel != null) {
         email = response.authResponseModel!.email;
       }
-      if(ResponsiveHelper.isDesktop(Get.context)){
+      if (ResponsiveHelper.isDesktop(Get.context)) {
         Get.back();
-        Get.dialog(NewUserSetupScreen(name: displayName ?? '', loginType: CentralizeLoginType.social.name, phone: '', email: email, backFromThis: backFromThis));
+        Get.dialog(
+          NewUserSetupScreen(
+            name: displayName ?? '',
+            loginType: CentralizeLoginType.social.name,
+            phone: '',
+            email: email,
+            backFromThis: backFromThis,
+          ),
+        );
       } else {
-        Get.toNamed(RouteHelper.getNewUserSetupScreen(name: displayName ?? '', loginType: CentralizeLoginType.social.name, phone: '', email: email, backFromThis: backFromThis));
+        Get.toNamed(
+          RouteHelper.getNewUserSetupScreen(
+            name: displayName ?? '',
+            loginType: CentralizeLoginType.social.name,
+            phone: '',
+            email: email,
+            backFromThis: backFromThis,
+          ),
+        );
       }
     } else {
-      if(backFromThis) {
+      if (backFromThis) {
         await Get.find<LocationController>().syncZoneData();
-        if(ResponsiveHelper.isDesktop(Get.context)){
+        if (ResponsiveHelper.isDesktop(Get.context)) {
           Get.offAllNamed(RouteHelper.getInitialRoute(fromSplash: false));
         } else {
           Get.back();
         }
       } else {
-        Get.find<LocationController>().navigateToLocationScreen('sign-in', offNamed: true);
+        Get.find<LocationController>().navigateToLocationScreen(
+          'sign-in',
+          offNamed: true,
+        );
       }
     }
   }
